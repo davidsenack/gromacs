@@ -1,0 +1,75 @@
+HeadNode:
+  InstanceType: c5a.xlarge
+  Networking:
+    SubnetId: SubnetIdPlaceholder
+  LocalStorage:
+    RootVolume:
+      VolumeType: gp3
+  Iam:
+    AdditionalIamPolicies:
+      - Policy: arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+  Dcv:
+    Enabled: true
+Scheduling:
+  Scheduler: slurm
+  SlurmQueues:
+    - Name: hpc6a
+      AllocationStrategy: lowest-price
+      ComputeResources:
+        - Name: compute
+          Instances:
+            - InstanceType: hpc6a.48xlarge
+          MinCount: 0
+          MaxCount: 100
+          Efa:
+            Enabled: true
+            GdrSupport: true
+      Networking:
+        SubnetIds:
+          - SubnetIdPlaceholder
+        PlacementGroup:
+          Enabled: true
+      ComputeSettings:
+        LocalStorage:
+          RootVolume:
+            VolumeType: gp3
+    - Name: c6i
+      AllocationStrategy: capacity-optimized
+      ComputeResources:
+        - Name: spot
+          Instances:
+            - InstanceType: c6i.32xlarge
+            - InstanceType: c6a.32xlarge
+            - InstanceType: m6i.32xlarge
+            - InstanceType: m6a.32xlarge
+            - InstanceType: r6i.32xlarge
+            - InstanceType: r6a.32xlarge
+          MinCount: 0
+          MaxCount: 100
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+      ComputeSettings:
+        LocalStorage:
+          RootVolume:
+            VolumeType: gp3
+      Networking:
+        SubnetIds:
+          - SubnetIdPlaceholder
+        PlacementGroup:
+          Enabled: true
+      CapacityType: SPOT
+Region: us-east-2
+Imds:
+  ImdsSupport: v2.0
+Image:
+  Os: alinux2
+SharedStorage:
+  - Name: FsxLustre0
+    StorageType: FsxLustre
+    MountDir: /shared
+    FsxLustreSettings:
+      StorageCapacity: 1200
+      PerUnitStorageThroughput: 125
+      DeploymentType: PERSISTENT_2
+      DataCompressionType: LZ4
