@@ -20,10 +20,19 @@ resource "aws_subnet" "gromacs_subnet" {
   }
 }
 
+resource "aws_key_pair" "gromacs_key" {
+  key_name   = "gromacs_key"
+  public_key = file("${path.module}/.keys/gromacs_key.pub")
+}
+
 output "vpc_id" {
   value = aws_vpc.gromacs_vpc.id
 }
 
 output "subnet_id" {
   value = aws_subnet.gromacs_subnet.id
+}
+
+output "key_name" {
+  value = aws_key_pair.gromacs_key.key_name
 }
