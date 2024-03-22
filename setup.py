@@ -6,12 +6,12 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'gromacs=gromacs.gromacs:main',  # Adjust this if your main function is located differently
+            'gromacs=gromacs.gromacs:main',
         ],
     },
     author='David Senack',
     author_email='david.senack@gmail.com',
-    description='A brief description of your project',
+    description=' A streamlined CLI tool for deploying and managing GROMACS simulations on AWS, utilizing Terraform and AWS ParallelCluster for efficient cloud-based molecular dynamics.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/yourgithub/gromacs',
