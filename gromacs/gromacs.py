@@ -110,20 +110,30 @@ def check_pcluster_deletion(cluster_name):
 
 def main():
     parser = argparse.ArgumentParser(description="GROMACS Deployment Tool")
-    parser.add_argument("--deploy", action="store_true", 
-                        help="Deploy Terraform resources and create AWS ParallelCluster")
-    parser.add_argument("--delete", action="store_true", 
-                        help="Delete AWS ParallelCluster and Terraform resources")
+
+    parser.add_argument("--deploy", action="store_true",
+                        help="Deploy resources and create cluster")
+    
+    parser.add_argument("--delete", action="store_true",
+                        help="Delete cluster resources")
+    
     parser.add_argument("--check-terraform", action="store_true", 
                         help="Check if Terraform resources are still running")
+    
     parser.add_argument("--check-cluster", action="store_true", 
                         help="Check if AWS ParallelCluster is fully deleted")
-    parser.add_argument("--terraform-directory", type=str, 
+    
+    parser.add_argument("--terraform-directory", type=str,
                         help="Path to Terraform directory")
-    parser.add_argument("--gromacs-config", type=str, 
+    
+    parser.add_argument("--gromacs-config", type=str,
                         help="Path to GROMACS configuration file")
-    parser.add_argument("--cluster-name", type=str, default="gromacs", 
+    
+    parser.add_argument("--cluster-name", type=str, default="gromacs",
                         help="Name of the AWS ParallelCluster")
+    
+    parser.add_argument("--version", action="store_true",
+                        help="Print version and exit")
 
     args = parser.parse_args()
 
@@ -144,6 +154,8 @@ def main():
         check_terraform_resources(args.terraform_directory)
     elif args.check_cluster:
         check_pcluster_deletion(args.cluster_name)
+    elif args.version:
+        print("GROMACS v0.1")
     else:
         parser.print_help()
 
