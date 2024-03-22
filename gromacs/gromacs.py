@@ -1,5 +1,6 @@
 import os
 import subprocess
+import time
 
 
 def deploy_terraform_resources(terraform_directory, gromacs_config_yaml):
@@ -57,3 +58,24 @@ def create_pcluster(gromacs_config_yaml):
     ], check=True)
 
     print("AWS ParallelCluster creation initiated successfully.")
+
+
+def delete_resources(cluster_name, terraform_directory):
+    """Delete AWS ParallelCluster and Terraform resources."""
+    # Delete AWS ParallelCluster
+    subprocess.run([
+        "pcluster", "delete-cluster", "--cluster-name", cluster_name
+    ], check=True)
+    print(f"AWS ParallelCluster {cluster_name} deletion initiated successfully.")
+
+    # Wait for ParallelCluster deletion to complete
+    # This is a placeholder for waiting logic. Adjust according to actual needs.
+    time.sleep(300)  # Adjust the sleep time as necessary
+
+    # Navigate to Terraform directory
+    os.chdir(terraform_directory)
+
+    # Delete Terraform resources
+    subprocess.run(["terraform", "destroy", "-auto-approve"], check=True)
+    print("Terraform resources deletion initiated successfully.")
+
