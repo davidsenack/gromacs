@@ -8,6 +8,12 @@ HeadNode:
   Iam:
     AdditionalIamPolicies:
       - Policy: arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      - Policy: arn:aws:iam::aws:policy/AmazonEC2FullAccess
+  Ssh:
+    KeyName: ::TODO
+  CustomActions:
+    OnNodeStart:
+      Script: scripts/head_install.sh
   Dcv:
     Enabled: true
 Scheduling:
