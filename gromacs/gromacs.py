@@ -4,6 +4,7 @@ import os
 import subprocess
 import time
 import argparse
+import shutil
 
 
 def deploy_terraform_resources(terraform_directory, gromacs_config_yaml):
@@ -86,6 +87,16 @@ def delete_resources(cluster_name, terraform_directory):
     print("Terraform resources deletion initiated successfully.")
 
 
+def delete_keys_directory():
+    """Delete the .keys directory and its contents."""
+    keys_directory = os.path.join(os.getcwd(), ".keys")
+    if os.path.exists(keys_directory):
+        shutil.rmtree(keys_directory)
+        print(".keys directory and its contents have been deleted.")
+    else:
+        print(".keys directory does not exist.")
+
+
 def check_terraform_resources(terraform_directory):
     """Check if there are any Terraform resources still running."""
     os.chdir(terraform_directory)
@@ -106,6 +117,17 @@ def check_pcluster_deletion(cluster_name):
         print(f"AWS ParallelCluster {cluster_name} is fully deleted.")
     else:
         print(f"Warning: AWS ParallelCluster {cluster_name} deletion incomplete.")
+
+
+def create_terraform_keys_directory():
+    """Create a directory for Terraform keys if it doesn't exist."""
+    keys_directory = os.path.join(os.getcwd(), ".keys")
+    if not os.path.exists(keys_directory):
+        os.makedirs(keys_directory)
+        print(".keys directory created for Terraform.")
+    else:
+        print(".keys directory already exists.")
+
 
 
 def main():
