@@ -5,3 +5,9 @@ terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
 terraform/*.tfstate
 terraform/*.tfstate.*
+gromacs.egg-info
+.git
+.idea
+dist
+build
+*.egg-info
