@@ -1,7 +1,7 @@
 import os
 import subprocess
 import time
-
+import argparse
 
 def deploy_terraform_resources(terraform_directory, gromacs_config_yaml):
     """Deploy resources defined in the Terraform configuration."""
@@ -97,3 +97,38 @@ def check_pcluster_deletion(cluster_name):
         print(f"AWS ParallelCluster {cluster_name} is fully deleted.")
     else:
         print(f"Warning: AWS ParallelCluster {cluster_name} deletion may not be complete.")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="GROMACS Deployment Tool")
+    parser.add_argument("--deploy", action="store_true", help="Deploy Terraform resources and create AWS ParallelCluster")
+    parser.add_argument("--delete", action="store_true", help="Delete AWS ParallelCluster and Terraform resources")
+    parser.add_argument("--check-terraform", action="store_true", help="Check if Terraform resources are still running")
+    parser.add_argument("--check-cluster", action="store_true", help="Check if AWS ParallelCluster is fully deleted")
+    parser.add_argument("--terraform-directory", type=str, help="Path to Terraform directory")
+    parser.add_argument("--gromacs-config", type=str, help="Path to GROMACS configuration file")
+    parser.add_argument("--cluster-name", type=str, default="gromacs", help="Name of the AWS ParallelCluster")
+
+    args = parser.parse_args()
+
+    if args.deploy:
+        if not args.terraform_directory or not args.gromacs_config:
+            parser.error("--deploy requires --terraform-directory and --gromacs-config.")
+        deploy_terraform_resources(args.terraform_directory, args.gromacs_config)
+        create_pcluster(args.gromacs_config)
+    elif args.delete:
+        if not args.terraform_directory:
+            parser.error("--delete requires --terraform-directory.")
+        delete_resources(args.cluster_name, args.terraform_directory)
+    elif args.check_terraform:
+        if not args.terraform_directory:
+            parser.error("--check-terraform requires --terraform-directory.")
+        check_terraform_resources(args.terraform_directory)
+    elif args.check_cluster:
+        check_pcluster_deletion(args.cluster_name)
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()
