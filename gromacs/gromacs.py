@@ -79,3 +79,21 @@ def delete_resources(cluster_name, terraform_directory):
     subprocess.run(["terraform", "destroy", "-auto-approve"], check=True)
     print("Terraform resources deletion initiated successfully.")
 
+
+def check_terraform_resources(terraform_directory):
+    """Check if there are any Terraform resources still running."""
+    os.chdir(terraform_directory)
+    result = subprocess.run(["terraform", "state", "list"], capture_output=True, text=True)
+    if result.stdout.strip():
+        print("Warning: There are still Terraform resources running.")
+    else:
+        print("No Terraform resources are running.")
+
+
+def check_pcluster_deletion(cluster_name):
+    """Check if the AWS ParallelCluster is fully deleted."""
+    result = subprocess.run(["pcluster", "describe-cluster", "--cluster-name", cluster_name], capture_output=True, text=True)
+    if "ClusterStatus: DELETE_COMPLETE" in result.stdout:
+        print(f"AWS ParallelCluster {cluster_name} is fully deleted.")
+    else:
+        print(f"Warning: AWS ParallelCluster {cluster_name} deletion may not be complete.")
