@@ -3,6 +3,7 @@ import subprocess
 import time
 import argparse
 
+
 def deploy_terraform_resources(terraform_directory, gromacs_config_yaml):
     """Deploy resources defined in the Terraform configuration."""
     # Navigate to Terraform directory
